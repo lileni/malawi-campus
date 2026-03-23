@@ -94,6 +94,13 @@ export default function Login() {
                   minLength={6}
                 />
               </div>
+              {!isSignUp && (
+                <div className="text-right">
+                  <Link to="/forgot-password" className="text-xs text-primary hover:underline">
+                    Forgot password?
+                  </Link>
+                </div>
+              )}
               {error && <p className="text-sm text-destructive">{error}</p>}
               {message && <p className="text-sm text-primary">{message}</p>}
               <Button type="submit" className="w-full" disabled={loading}>
