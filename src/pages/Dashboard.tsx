@@ -43,7 +43,7 @@ export default function Dashboard() {
           Welcome back, {user?.name.split(" ")[0]}
         </h1>
         <p className="text-muted-foreground text-sm mt-1 animate-fade-up stagger-1">
-          {user?.role === "student" ? "Here's your academic overview" : "Here's what's happening at Kasungu TTC"}
+          Here's what's happening at Kasungu TTC
         </p>
       </div>
 

@@ -79,7 +79,7 @@ export default function AppSidebar({ collapsed, onToggle }: { collapsed: boolean
         {!collapsed && user && (
           <div className="mb-2 px-1">
             <p className="text-sm font-medium truncate">{user.name}</p>
-            <p className="text-[11px] capitalize opacity-70">{user.role}</p>
+            <p className="text-[11px] opacity-70 truncate">{user.email}</p>
           </div>
         )}
         <button
