@@ -14,19 +14,19 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard, roles: ["admin", "lecturer", "student", "registrar"] },
-  { label: "Students", path: "/students", icon: Users, roles: ["admin", "registrar", "lecturer"] },
-  { label: "Courses", path: "/courses", icon: BookOpen, roles: ["admin", "lecturer", "student", "registrar"] },
-  { label: "Timetable", path: "/timetable", icon: Calendar, roles: ["admin", "lecturer", "student", "registrar"] },
-  { label: "Attendance", path: "/attendance", icon: ClipboardCheck, roles: ["admin", "lecturer", "student"] },
-  { label: "Grades & Results", path: "/grades", icon: GraduationCap, roles: ["admin", "lecturer", "student", "registrar"] },
-  { label: "Teaching Practice", path: "/teaching-practice", icon: Briefcase, roles: ["admin", "lecturer", "student"] },
-  { label: "Fees & Payments", path: "/fees", icon: Wallet, roles: ["admin", "student", "registrar"] },
-  { label: "Admissions", path: "/admissions", icon: UserCheck, roles: ["admin", "registrar"] },
-  { label: "Notifications", path: "/notifications", icon: Bell, roles: ["admin", "lecturer", "student", "registrar"] },
-  { label: "Reports", path: "/reports", icon: FileText, roles: ["admin", "registrar"] },
-  { label: "Analytics", path: "/analytics", icon: BarChart3, roles: ["admin"] },
-  { label: "Settings", path: "/settings", icon: Settings, roles: ["admin"] },
+  { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+  { label: "Students", path: "/students", icon: Users },
+  { label: "Courses", path: "/courses", icon: BookOpen },
+  { label: "Timetable", path: "/timetable", icon: Calendar },
+  { label: "Attendance", path: "/attendance", icon: ClipboardCheck },
+  { label: "Grades & Results", path: "/grades", icon: GraduationCap },
+  { label: "Teaching Practice", path: "/teaching-practice", icon: Briefcase },
+  { label: "Fees & Payments", path: "/fees", icon: Wallet },
+  { label: "Admissions", path: "/admissions", icon: UserCheck },
+  { label: "Notifications", path: "/notifications", icon: Bell },
+  { label: "Reports", path: "/reports", icon: FileText },
+  { label: "Analytics", path: "/analytics", icon: BarChart3 },
+  { label: "Settings", path: "/settings", icon: Settings },
 ];
 
 export default function AppSidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
