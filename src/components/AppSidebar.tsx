@@ -33,7 +33,7 @@ export default function AppSidebar({ collapsed, onToggle }: { collapsed: boolean
   const { user, logout } = useAuth();
   const location = useLocation();
 
-  const visibleItems = NAV_ITEMS.filter((item) => user && item.roles.includes(user.role));
+  const visibleItems = NAV_ITEMS;
 
   return (
     <aside
