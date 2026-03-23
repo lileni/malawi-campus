@@ -1,4 +1,4 @@
-import { useAuth, type UserRole } from "@/lib/auth-context";
+import { useAuth } from "@/lib/auth-context";
 import { useLocation, Link } from "react-router-dom";
 import logo from "@/assets/kasungu-ttc-logo.png";
 import {
