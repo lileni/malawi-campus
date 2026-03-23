@@ -11,7 +11,6 @@ interface NavItem {
   label: string;
   path: string;
   icon: React.ElementType;
-  roles: UserRole[];
 }
 
 const NAV_ITEMS: NavItem[] = [
