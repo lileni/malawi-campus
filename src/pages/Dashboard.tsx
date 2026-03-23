@@ -34,9 +34,7 @@ const RECENT_ACTIVITIES = [
 export default function Dashboard() {
   const { user } = useAuth();
 
-  const stats = user?.role === "student" ? STUDENT_STATS
-    : user?.role === "lecturer" ? LECTURER_STATS
-    : ADMIN_STATS;
+  const stats = ADMIN_STATS;
 
   return (
     <div className="space-y-6">
@@ -45,7 +43,7 @@ export default function Dashboard() {
           Welcome back, {user?.name.split(" ")[0]}
         </h1>
         <p className="text-muted-foreground text-sm mt-1 animate-fade-up stagger-1">
-          {user?.role === "student" ? "Here's your academic overview" : "Here's what's happening at Kasungu TTC"}
+          Here's what's happening at Kasungu TTC
         </p>
       </div>
 
