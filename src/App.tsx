@@ -31,7 +31,8 @@ function ProtectedRoutes() {
 }
 
 function LoginRoute() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><p className="text-muted-foreground">Loading…</p></div>;
   if (isAuthenticated) return <Navigate to="/dashboard" replace />;
   return <Login />;
 }
