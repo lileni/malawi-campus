@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import logo from "@/assets/kasungu-ttc-logo.png";
 import { BookOpen, GraduationCap, Shield, UserCheck } from "lucide-react";
+import { lovable } from "@/integrations/lovable/index";
 
 const DEMO_ACCOUNTS = [
   { label: "Administrator", email: "admin@kasunguttc.ac.mw", icon: Shield },
