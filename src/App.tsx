@@ -48,6 +48,8 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/login" element={<LoginRoute />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route element={<ProtectedRoutes />}>
               <Route path="/dashboard" element={<Dashboard />} />
