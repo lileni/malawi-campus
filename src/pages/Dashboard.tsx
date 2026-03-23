@@ -34,9 +34,7 @@ const RECENT_ACTIVITIES = [
 export default function Dashboard() {
   const { user } = useAuth();
 
-  const stats = user?.role === "student" ? STUDENT_STATS
-    : user?.role === "lecturer" ? LECTURER_STATS
-    : ADMIN_STATS;
+  const stats = ADMIN_STATS;
 
   return (
     <div className="space-y-6">
