@@ -1,4 +1,4 @@
-import { useAuth } from "@/lib/auth-context";
+import { useAuth, type AppRole } from "@/lib/auth-context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, BookOpen, GraduationCap, Wallet, ClipboardCheck, TrendingUp, AlertCircle, Calendar } from "lucide-react";
 
@@ -9,6 +9,13 @@ const ADMIN_STATS = [
   { label: "Fee Collection", value: "MWK 18.4M", icon: Wallet, change: "72% collected" },
 ];
 
+const LECTURER_STATS = [
+  { label: "My Courses", value: "4", icon: BookOpen, change: "This semester" },
+  { label: "Students Taught", value: "186", icon: Users, change: "Across courses" },
+  { label: "Pending Grades", value: "23", icon: AlertCircle, change: "Due this week" },
+  { label: "Next Class", value: "10:00 AM", icon: Calendar, change: "EDU 201 — Room B3" },
+];
+
 const STUDENT_STATS = [
   { label: "My Courses", value: "6", icon: BookOpen, change: "Semester 2" },
   { label: "Attendance", value: "87%", icon: ClipboardCheck, change: "Last 30 days" },
@@ -16,12 +23,19 @@ const STUDENT_STATS = [
   { label: "Fee Balance", value: "MWK 45,000", icon: Wallet, change: "Due Mar 30" },
 ];
 
-const LECTURER_STATS = [
-  { label: "My Courses", value: "4", icon: BookOpen, change: "This semester" },
-  { label: "Students Taught", value: "186", icon: Users, change: "Across courses" },
-  { label: "Pending Grades", value: "23", icon: AlertCircle, change: "Due this week" },
-  { label: "Next Class", value: "10:00 AM", icon: Calendar, change: "EDU 201 — Room B3" },
+const REGISTRAR_STATS = [
+  { label: "Total Students", value: "1,247", icon: Users, change: "+38 this term" },
+  { label: "Pending Admissions", value: "84", icon: ClipboardCheck, change: "Awaiting review" },
+  { label: "Active Courses", value: "42", icon: BookOpen, change: "6 programs" },
+  { label: "Fee Collection", value: "MWK 18.4M", icon: Wallet, change: "72% collected" },
 ];
+
+const STATS_BY_ROLE: Record<AppRole, typeof ADMIN_STATS> = {
+  admin: ADMIN_STATS,
+  registrar: REGISTRAR_STATS,
+  lecturer: LECTURER_STATS,
+  student: STUDENT_STATS,
+};
 
 const RECENT_ACTIVITIES = [
   { text: "New student batch enrolled — 64 first-year students", time: "2 hours ago" },
@@ -33,8 +47,8 @@ const RECENT_ACTIVITIES = [
 
 export default function Dashboard() {
   const { user } = useAuth();
-
-  const stats = ADMIN_STATS;
+  const role = user?.role || "student";
+  const stats = STATS_BY_ROLE[role];
 
   return (
     <div className="space-y-6">
