@@ -2,11 +2,14 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { supabase } from "@/integrations/supabase/client";
 import type { User as SupabaseUser, Session } from "@supabase/supabase-js";
 
+export type AppRole = "admin" | "lecturer" | "student" | "registrar";
+
 export interface User {
   id: string;
   name: string;
   email: string;
   avatar?: string;
+  role: AppRole;
 }
 
 interface AuthContextType {
@@ -21,12 +24,19 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-function mapUser(su: SupabaseUser): User {
+async function fetchUserRole(userId: string): Promise<AppRole> {
+  const { data } = await supabase.rpc("get_user_role", { _user_id: userId });
+  return (data as AppRole) || "student";
+}
+
+async function buildUser(su: SupabaseUser): Promise<User> {
+  const role = await fetchUserRole(su.id);
   return {
     id: su.id,
     name: su.user_metadata?.full_name || su.email?.split("@")[0] || "",
     email: su.email || "",
     avatar: su.user_metadata?.avatar_url,
+    role,
   };
 }
 
@@ -36,17 +46,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Listen for auth changes FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
-      setUser(session?.user ? mapUser(session.user) : null);
+      if (session?.user) {
+        const u = await buildUser(session.user);
+        setUser(u);
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     });
 
-    // Then check existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
-      setUser(session?.user ? mapUser(session.user) : null);
+      if (session?.user) {
+        const u = await buildUser(session.user);
+        setUser(u);
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     });
 

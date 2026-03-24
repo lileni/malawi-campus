@@ -1,4 +1,4 @@
-import { useAuth } from "@/lib/auth-context";
+import { useAuth, type AppRole } from "@/lib/auth-context";
 import { useLocation, Link } from "react-router-dom";
 import logo from "@/assets/kasungu-ttc-logo.png";
 import {
@@ -11,29 +11,40 @@ interface NavItem {
   label: string;
   path: string;
   icon: React.ElementType;
+  roles: AppRole[]; // which roles can see this item
 }
 
+const ALL_ROLES: AppRole[] = ["admin", "registrar", "lecturer", "student"];
+
 const NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-  { label: "Students", path: "/students", icon: Users },
-  { label: "Courses", path: "/courses", icon: BookOpen },
-  { label: "Timetable", path: "/timetable", icon: Calendar },
-  { label: "Attendance", path: "/attendance", icon: ClipboardCheck },
-  { label: "Grades & Results", path: "/grades", icon: GraduationCap },
-  { label: "Teaching Practice", path: "/teaching-practice", icon: Briefcase },
-  { label: "Fees & Payments", path: "/fees", icon: Wallet },
-  { label: "Admissions", path: "/admissions", icon: UserCheck },
-  { label: "Notifications", path: "/notifications", icon: Bell },
-  { label: "Reports", path: "/reports", icon: FileText },
-  { label: "Analytics", path: "/analytics", icon: BarChart3 },
-  { label: "Settings", path: "/settings", icon: Settings },
+  { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard, roles: ALL_ROLES },
+  { label: "Students", path: "/students", icon: Users, roles: ["admin", "registrar", "lecturer"] },
+  { label: "Courses", path: "/courses", icon: BookOpen, roles: ["admin", "registrar", "lecturer", "student"] },
+  { label: "Timetable", path: "/timetable", icon: Calendar, roles: ALL_ROLES },
+  { label: "Attendance", path: "/attendance", icon: ClipboardCheck, roles: ["admin", "lecturer"] },
+  { label: "Grades & Results", path: "/grades", icon: GraduationCap, roles: ["admin", "registrar", "lecturer", "student"] },
+  { label: "Teaching Practice", path: "/teaching-practice", icon: Briefcase, roles: ["admin", "lecturer", "student"] },
+  { label: "Fees & Payments", path: "/fees", icon: Wallet, roles: ["admin", "registrar"] },
+  { label: "Admissions", path: "/admissions", icon: UserCheck, roles: ["admin", "registrar"] },
+  { label: "Notifications", path: "/notifications", icon: Bell, roles: ALL_ROLES },
+  { label: "Reports", path: "/reports", icon: FileText, roles: ["admin", "registrar"] },
+  { label: "Analytics", path: "/analytics", icon: BarChart3, roles: ["admin", "registrar"] },
+  { label: "Settings", path: "/settings", icon: Settings, roles: ["admin"] },
 ];
+
+const ROLE_LABELS: Record<AppRole, string> = {
+  admin: "Administrator",
+  registrar: "Registrar",
+  lecturer: "Lecturer",
+  student: "Student",
+};
 
 export default function AppSidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
   const { user, logout } = useAuth();
   const location = useLocation();
 
-  const visibleItems = NAV_ITEMS;
+  const userRole = user?.role || "student";
+  const visibleItems = NAV_ITEMS.filter((item) => item.roles.includes(userRole));
 
   return (
     <aside
@@ -79,7 +90,7 @@ export default function AppSidebar({ collapsed, onToggle }: { collapsed: boolean
         {!collapsed && user && (
           <div className="mb-2 px-1">
             <p className="text-sm font-medium truncate">{user.name}</p>
-            <p className="text-[11px] opacity-70 truncate">{user.email}</p>
+            <p className="text-[11px] opacity-70 truncate">{ROLE_LABELS[user.role]}</p>
           </div>
         )}
         <button
