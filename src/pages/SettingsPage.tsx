@@ -1,10 +1,40 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Shield, Database, Bell, Globe } from "lucide-react";
+import { Shield, Database, Bell, Globe, KeyRound } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/auth-context";
+import { toast } from "sonner";
 
 export default function SettingsPage() {
+  const { user } = useAuth();
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [settingPassword, setSettingPassword] = useState(false);
+
+  const handleSetPassword = async () => {
+    if (newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+    setSettingPassword(true);
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success("Password set successfully! You can now sign in with your email and password.");
+      setNewPassword("");
+      setConfirmPassword("");
+    }
+    setSettingPassword(false);
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -15,7 +45,46 @@ export default function SettingsPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="animate-fade-up stagger-2">
+        {/* Set / Change Password */}
+        <Card className="animate-fade-up stagger-2 lg:col-span-2">
+          <CardHeader className="pb-3">
+            <CardTitle className="section-title flex items-center gap-2">
+              <KeyRound className="h-4 w-4 text-primary" /> Set Email Login Password
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 max-w-md">
+            <p className="text-sm text-muted-foreground">
+              {user?.email ? `Create a password for ${user.email} so you can also sign in with email and password.` : "Create a password for email login."}
+            </p>
+            <div className="space-y-2">
+              <Label htmlFor="new-password">New Password</Label>
+              <Input
+                id="new-password"
+                type="password"
+                placeholder="••••••••"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                minLength={6}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirm-password">Confirm Password</Label>
+              <Input
+                id="confirm-password"
+                type="password"
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                minLength={6}
+              />
+            </div>
+            <Button onClick={handleSetPassword} disabled={settingPassword} size="sm">
+              {settingPassword ? "Setting password…" : "Set Password"}
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="animate-fade-up stagger-3">
           <CardHeader className="pb-3">
             <CardTitle className="section-title flex items-center gap-2">
               <Globe className="h-4 w-4 text-primary" /> Institution Info
@@ -38,7 +107,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card className="animate-fade-up stagger-3">
+        <Card className="animate-fade-up stagger-4">
           <CardHeader className="pb-3">
             <CardTitle className="section-title flex items-center gap-2">
               <Shield className="h-4 w-4 text-primary" /> Security
@@ -47,11 +116,11 @@ export default function SettingsPage() {
           <CardContent className="space-y-3 text-sm">
             <div className="flex justify-between items-center py-2 border-b border-border/50">
               <span>Two-factor authentication</span>
-              <Badge variant="secondary">Disabled</Badge>
+              <SettingsBadge variant="secondary">Disabled</SettingsBadge>
             </div>
             <div className="flex justify-between items-center py-2 border-b border-border/50">
               <span>Password policy</span>
-              <span className="text-muted-foreground">Minimum 8 characters</span>
+              <span className="text-muted-foreground">Minimum 6 characters</span>
             </div>
             <div className="flex justify-between items-center py-2">
               <span>Session timeout</span>
@@ -60,7 +129,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card className="animate-fade-up stagger-4">
+        <Card className="animate-fade-up stagger-5">
           <CardHeader className="pb-3">
             <CardTitle className="section-title flex items-center gap-2">
               <Bell className="h-4 w-4 text-primary" /> Notifications
@@ -69,20 +138,20 @@ export default function SettingsPage() {
           <CardContent className="space-y-3 text-sm">
             <div className="flex justify-between items-center py-2 border-b border-border/50">
               <span>SMS alerts (Airtel/TNM)</span>
-              <Badge variant="default">Active</Badge>
+              <SettingsBadge variant="default">Active</SettingsBadge>
             </div>
             <div className="flex justify-between items-center py-2 border-b border-border/50">
               <span>Email notifications</span>
-              <Badge variant="default">Active</Badge>
+              <SettingsBadge variant="default">Active</SettingsBadge>
             </div>
             <div className="flex justify-between items-center py-2">
               <span>Fee reminders</span>
-              <Badge variant="default">Active</Badge>
+              <SettingsBadge variant="default">Active</SettingsBadge>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="animate-fade-up stagger-5">
+        <Card className="animate-fade-up stagger-6">
           <CardHeader className="pb-3">
             <CardTitle className="section-title flex items-center gap-2">
               <Database className="h-4 w-4 text-primary" /> Data & Backup
@@ -105,7 +174,7 @@ export default function SettingsPage() {
   );
 }
 
-function Badge({ variant, children, className }: { variant: "default" | "secondary"; children: React.ReactNode; className?: string }) {
+function SettingsBadge({ variant, children, className }: { variant: "default" | "secondary"; children: React.ReactNode; className?: string }) {
   return (
     <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${
       variant === "default" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
