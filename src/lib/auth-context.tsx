@@ -49,8 +49,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       if (session?.user) {
-        const u = await buildUser(session.user);
-        setUser(u);
+        try {
+          const u = await buildUser(session.user);
+          setUser(u);
+        } catch {
+          setUser(null);
+        }
       } else {
         setUser(null);
       }
@@ -60,8 +64,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       if (session?.user) {
-        const u = await buildUser(session.user);
-        setUser(u);
+        try {
+          const u = await buildUser(session.user);
+          setUser(u);
+        } catch {
+          setUser(null);
+        }
       } else {
         setUser(null);
       }
