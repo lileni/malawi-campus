@@ -32,6 +32,8 @@ const REGISTRAR_STATS = [
 
 const STATS_BY_ROLE: Record<AppRole, typeof ADMIN_STATS> = {
   admin: ADMIN_STATS,
+  principal: ADMIN_STATS,
+  bursar: ADMIN_STATS,
   registrar: REGISTRAR_STATS,
   lecturer: LECTURER_STATS,
   student: STUDENT_STATS,
