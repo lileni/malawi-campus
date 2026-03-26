@@ -14,26 +14,29 @@ interface NavItem {
   roles: AppRole[]; // which roles can see this item
 }
 
-const ALL_ROLES: AppRole[] = ["admin", "registrar", "lecturer", "student"];
+const ALL_ROLES: AppRole[] = ["admin", "registrar", "lecturer", "student", "principal", "bursar"];
+const FULL_ACCESS: AppRole[] = ["admin", "principal", "bursar"];
 
 const NAV_ITEMS: NavItem[] = [
   { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard, roles: ALL_ROLES },
-  { label: "Students", path: "/students", icon: Users, roles: ["admin", "registrar", "lecturer"] },
-  { label: "Courses", path: "/courses", icon: BookOpen, roles: ["admin", "registrar", "lecturer", "student"] },
+  { label: "Students", path: "/students", icon: Users, roles: [...FULL_ACCESS, "registrar", "lecturer"] },
+  { label: "Courses", path: "/courses", icon: BookOpen, roles: ALL_ROLES },
   { label: "Timetable", path: "/timetable", icon: Calendar, roles: ALL_ROLES },
-  { label: "Attendance", path: "/attendance", icon: ClipboardCheck, roles: ["admin", "lecturer"] },
-  { label: "Grades & Results", path: "/grades", icon: GraduationCap, roles: ["admin", "registrar", "lecturer", "student"] },
-  { label: "Teaching Practice", path: "/teaching-practice", icon: Briefcase, roles: ["admin", "lecturer", "student"] },
-  { label: "Fees & Payments", path: "/fees", icon: Wallet, roles: ["admin", "registrar"] },
-  { label: "Admissions", path: "/admissions", icon: UserCheck, roles: ["admin", "registrar"] },
+  { label: "Attendance", path: "/attendance", icon: ClipboardCheck, roles: [...FULL_ACCESS, "lecturer"] },
+  { label: "Grades & Results", path: "/grades", icon: GraduationCap, roles: ALL_ROLES },
+  { label: "Teaching Practice", path: "/teaching-practice", icon: Briefcase, roles: [...FULL_ACCESS, "lecturer", "student"] },
+  { label: "Fees & Payments", path: "/fees", icon: Wallet, roles: [...FULL_ACCESS, "registrar"] },
+  { label: "Admissions", path: "/admissions", icon: UserCheck, roles: [...FULL_ACCESS, "registrar"] },
   { label: "Notifications", path: "/notifications", icon: Bell, roles: ALL_ROLES },
-  { label: "Reports", path: "/reports", icon: FileText, roles: ["admin", "registrar"] },
-  { label: "Analytics", path: "/analytics", icon: BarChart3, roles: ["admin", "registrar"] },
-  { label: "Settings", path: "/settings", icon: Settings, roles: ["admin"] },
+  { label: "Reports", path: "/reports", icon: FileText, roles: [...FULL_ACCESS, "registrar"] },
+  { label: "Analytics", path: "/analytics", icon: BarChart3, roles: [...FULL_ACCESS, "registrar"] },
+  { label: "Settings", path: "/settings", icon: Settings, roles: FULL_ACCESS },
 ];
 
 const ROLE_LABELS: Record<AppRole, string> = {
   admin: "Administrator",
+  principal: "Principal",
+  bursar: "Bursar",
   registrar: "Registrar",
   lecturer: "Lecturer",
   student: "Student",
