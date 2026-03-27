@@ -30,6 +30,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Notifications", path: "/notifications", icon: Bell, roles: ALL_ROLES },
   { label: "Reports", path: "/reports", icon: FileText, roles: [...FULL_ACCESS, "registrar"] },
   { label: "Analytics", path: "/analytics", icon: BarChart3, roles: [...FULL_ACCESS, "registrar"] },
+  { label: "User Management", path: "/admin", icon: Users, roles: FULL_ACCESS },
   { label: "Settings", path: "/settings", icon: Settings, roles: FULL_ACCESS },
 ];
 
