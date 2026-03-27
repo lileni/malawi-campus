@@ -21,6 +21,7 @@ import Notifications from "./pages/Notifications";
 import Reports from "./pages/Reports";
 import Analytics from "./pages/Analytics";
 import SettingsPage from "./pages/SettingsPage";
+import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -65,6 +66,7 @@ const App = () => (
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/analytics" element={<Analytics />} />
+              <Route path="/admin" element={<AdminPanel />} />
               <Route path="/settings" element={<SettingsPage />} />
             </Route>
             <Route path="*" element={<NotFound />} />
