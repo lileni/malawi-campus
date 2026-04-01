@@ -33,7 +33,7 @@ interface UserRow {
 }
 
 export default function AdminPanel() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -42,9 +42,10 @@ export default function AdminPanel() {
   const canAccess = user && FULL_ACCESS.includes(user.role);
 
   useEffect(() => {
+    if (authLoading) return;
     if (!canAccess) return;
     fetchUsers();
-  }, [canAccess]);
+  }, [canAccess, authLoading]);
 
   async function fetchUsers() {
     setLoading(true);
@@ -65,13 +66,14 @@ export default function AdminPanel() {
 
       const merged: UserRow[] = (roles ?? []).map((r) => ({
         id: r.user_id,
-        email: "", // will be filled if available
+        email: "",
         full_name: profileMap.get(r.user_id) || null,
         role: r.role as AppRole,
       }));
 
       setUsers(merged);
     } catch (err: any) {
+      console.error("AdminPanel fetchUsers error:", err);
       toast.error("Failed to load users: " + err.message);
     } finally {
       setLoading(false);
@@ -95,6 +97,14 @@ export default function AdminPanel() {
     } finally {
       setUpdatingId(null);
     }
+  }
+
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <p className="text-muted-foreground">Loading…</p>
+      </div>
+    );
   }
 
   if (!canAccess) return <Navigate to="/dashboard" replace />;
