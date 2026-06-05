@@ -4,7 +4,7 @@ import logo from "@/assets/kasungu-ttc-logo.png";
 import {
   LayoutDashboard, Users, BookOpen, Calendar, ClipboardCheck,
   GraduationCap, Wallet, Bell, FileText, BarChart3, Settings,
-  LogOut, UserCheck, Briefcase,
+  LogOut, UserCheck, Briefcase, UserPlus,
 } from "lucide-react";
 
 interface NavItem {
