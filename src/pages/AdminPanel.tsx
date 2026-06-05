@@ -49,18 +49,15 @@ export default function AdminPanel() {
   }, [canAccess, authLoading, user?.id, user?.role]);
 
   async function fetchUsers() {
+    console.log("[AdminPanel] fetchUsers start");
     setLoading(true);
     try {
-      // Fetch roles
-      const { data: roles, error: rolesErr } = await supabase
-        .from("user_roles")
-        .select("user_id, role");
+      const rolesPromise = supabase.from("user_roles").select("user_id, role");
+      const profilesPromise = supabase.from("profiles").select("id, full_name");
+      const [{ data: roles, error: rolesErr }, { data: profiles, error: profErr }] =
+        await Promise.all([rolesPromise, profilesPromise]);
+      console.log("[AdminPanel] fetchUsers results", { roles, rolesErr, profiles, profErr });
       if (rolesErr) throw rolesErr;
-
-      // Fetch profiles
-      const { data: profiles, error: profErr } = await supabase
-        .from("profiles")
-        .select("id, full_name");
       if (profErr) throw profErr;
 
       const profileMap = new Map(profiles?.map((p) => [p.id, p.full_name]) ?? []);
@@ -77,6 +74,7 @@ export default function AdminPanel() {
       console.error("AdminPanel fetchUsers error:", err);
       toast.error("Failed to load users: " + err.message);
     } finally {
+      console.log("[AdminPanel] fetchUsers done");
       setLoading(false);
     }
   }
