@@ -42,10 +42,11 @@ export default function AdminPanel() {
   const canAccess = user && FULL_ACCESS.includes(user.role);
 
   useEffect(() => {
+    console.log("[AdminPanel] effect", { authLoading, canAccess, userId: user?.id, role: user?.role });
     if (authLoading) return;
     if (!canAccess) return;
     fetchUsers();
-  }, [canAccess, authLoading]);
+  }, [canAccess, authLoading, user?.id, user?.role]);
 
   async function fetchUsers() {
     setLoading(true);
