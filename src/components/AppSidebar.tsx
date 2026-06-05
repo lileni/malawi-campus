@@ -4,7 +4,7 @@ import logo from "@/assets/kasungu-ttc-logo.png";
 import {
   LayoutDashboard, Users, BookOpen, Calendar, ClipboardCheck,
   GraduationCap, Wallet, Bell, FileText, BarChart3, Settings,
-  LogOut, UserCheck, Briefcase,
+  LogOut, UserCheck, Briefcase, UserPlus,
 } from "lucide-react";
 
 interface NavItem {
@@ -30,6 +30,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Notifications", path: "/notifications", icon: Bell, roles: ALL_ROLES },
   { label: "Reports", path: "/reports", icon: FileText, roles: [...FULL_ACCESS, "registrar"] },
   { label: "Analytics", path: "/analytics", icon: BarChart3, roles: [...FULL_ACCESS, "registrar"] },
+  { label: "Approvals", path: "/approvals", icon: UserPlus, roles: [...FULL_ACCESS, "registrar"] },
   { label: "User Management", path: "/admin", icon: Users, roles: FULL_ACCESS },
   { label: "Settings", path: "/settings", icon: Settings, roles: FULL_ACCESS },
 ];

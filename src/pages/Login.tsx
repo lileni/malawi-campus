@@ -1,12 +1,24 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth, type AppRole } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 import logo from "@/assets/kasungu-ttc-logo.png";
 import { lovable } from "@/integrations/lovable/index";
+
+const REQUESTABLE_ROLES: { value: AppRole; label: string }[] = [
+  { value: "student", label: "Student" },
+  { value: "lecturer", label: "Lecturer" },
+  { value: "registrar", label: "Registrar" },
+  { value: "bursar", label: "Bursar" },
+  { value: "principal", label: "Principal" },
+  { value: "admin", label: "Administrator" },
+];
 
 export default function Login() {
   const { login, signup } = useAuth();
@@ -14,6 +26,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [requestedRole, setRequestedRole] = useState<AppRole>("student");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,8 +38,10 @@ export default function Login() {
     setLoading(true);
     try {
       if (isSignUp) {
-        await signup(email, password, fullName);
-        setMessage("Check your email for a verification link to complete signup.");
+        await signup(email, password, fullName, requestedRole);
+        setMessage(
+          "Account created. An administrator must approve your account before you can sign in. Please also check your email for a verification link."
+        );
       } else {
         await login(email, password);
       }
@@ -59,17 +74,35 @@ export default function Login() {
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
               {isSignUp && (
-                <div className="space-y-2">
-                  <Label htmlFor="fullName">Full Name</Label>
-                  <Input
-                    id="fullName"
-                    type="text"
-                    placeholder="Your full name"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    required
-                  />
-                </div>
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="fullName">Full Name</Label>
+                    <Input
+                      id="fullName"
+                      type="text"
+                      placeholder="Your full name"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="requestedRole">I am signing up as a</Label>
+                    <Select value={requestedRole} onValueChange={(v) => setRequestedRole(v as AppRole)}>
+                      <SelectTrigger id="requestedRole">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {REQUESTABLE_ROLES.map((r) => (
+                          <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <p className="text-[11px] text-muted-foreground">
+                      An administrator will review and approve your account.
+                    </p>
+                  </div>
+                </>
               )}
               <div className="space-y-2">
                 <Label htmlFor="email">Email address</Label>

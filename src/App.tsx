@@ -22,15 +22,18 @@ import Reports from "./pages/Reports";
 import Analytics from "./pages/Analytics";
 import SettingsPage from "./pages/SettingsPage";
 import AdminPanel from "./pages/AdminPanel";
+import Approvals from "./pages/Approvals";
+import AccountPending from "./pages/AccountPending";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
 
 function ProtectedRoutes() {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
   if (loading) return <div className="min-h-screen flex items-center justify-center"><p className="text-muted-foreground">Loading…</p></div>;
   if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (user && user.status !== "active") return <AccountPending />;
   return <DashboardLayout />;
 }
 
@@ -67,6 +70,7 @@ const App = () => (
               <Route path="/reports" element={<Reports />} />
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/admin" element={<AdminPanel />} />
+              <Route path="/approvals" element={<Approvals />} />
               <Route path="/settings" element={<SettingsPage />} />
             </Route>
             <Route path="*" element={<NotFound />} />
